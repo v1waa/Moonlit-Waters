@@ -1,0 +1,11 @@
+<windows:DialogWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:windows="clr-namespace:MoonlitWaters.Windows" x:Class="MoonlitWaters.Windows.MessageWindow" Title="Moonlit Waters" Width="480" SizeToContent="Height" WindowStartupLocation="CenterOwner" Style="{StaticResource AppWindow}" ResizeMode="NoResize">
+  <StackPanel xmlns:ns0="https://github.com/avaloniaui" Margin="28">
+    <TextBlock x:Name="Heading" Margin="0,0,0,20" Style="{StaticResource HeadingText}"/>
+    <TextBox x:Name="Message" IsReadOnly="True" Background="Transparent" Padding="0" TextWrapping="Wrap" Margin="0,0,0,20"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+      <Button x:Name="CopyButton" Content="Копировать" Click="CopyClick" Margin="0,0,10,0" Style="{StaticResource GhostButton}"/>
+      <Button x:Name="CancelButton" Content="Отмена" Click="CancelClick" Margin="0,0,10,0" Style="{StaticResource GhostButton}" Visibility="Collapsed"/>
+      <Button Content="ОК" Width="100" Click="OkClick" Style="{StaticResource AppButton}"/>
+    </StackPanel>
+  </StackPanel>
+</windows:DialogWindow>

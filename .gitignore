@@ -4,3 +4,5 @@
 .idea/
 *.user
 Доступы.txt
+wpf-screenshots/
+*_wpftmp.csproj

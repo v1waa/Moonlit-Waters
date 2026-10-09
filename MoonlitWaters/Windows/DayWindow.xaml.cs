@@ -1,6 +1,6 @@
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 using System.Globalization;
 
@@ -17,7 +17,7 @@ public partial class DayWindow : SectionWindow
     protected override void RenderData()
     {
         AppointmentList.ItemsSource = data.Appointments;
-        NoAppointments.IsVisible = data.Appointments.Count == 0;
+        NoAppointments.Visibility = (data.Appointments.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
         var active = data.Appointments.Where(a => a.Status != "cancelled").ToList();
         CountText.Text = active.Count.ToString();
         RevenueText.Text = active.Where(a => a.Status == "completed").Sum(a => a.Price).ToString("N0", CultureInfo.GetCultureInfo("ru-RU")) + " ₽";
@@ -49,6 +49,6 @@ public partial class DayWindow : SectionWindow
     private async void NewAppointmentClick(object? sender, RoutedEventArgs e) => await OpenForm(new AppointmentWindow(data, SelectedDay));
     private async void EditAppointmentClick(object? sender, RoutedEventArgs e)
     { if ((sender as Button)?.Tag is Appointment a) await OpenForm(new AppointmentWindow(data, SelectedDay, a)); }
-    private async void AppointmentDoubleTapped(object? sender, TappedEventArgs e)
+    private async void AppointmentDoubleTapped(object? sender, MouseButtonEventArgs e)
     { if (AppointmentList.SelectedItem is Appointment a) await OpenForm(new AppointmentWindow(data, SelectedDay, a)); }
 }

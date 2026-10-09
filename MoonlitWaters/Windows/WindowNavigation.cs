@@ -1,18 +1,14 @@
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
+using System.Windows;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
 
 public static class WindowNavigation
 {
-    private static IClassicDesktopStyleApplicationLifetime Desktop =>
-        (IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
-
     public static void Open(string section, DateTime day)
     {
         if (!App.CurrentUser.IsAdmin && section is "prices" or "staff") return;
-        var window = Desktop.Windows.OfType<SectionWindow>().FirstOrDefault(w => w.Section == section);
+        var window = Application.Current.Windows.OfType<SectionWindow>().FirstOrDefault(w => w.Section == section);
         if (window is null)
         {
             window = section switch
@@ -28,23 +24,22 @@ public static class WindowNavigation
         else
         {
             window.SelectDay(day);
-            if (window.WindowState == Avalonia.Controls.WindowState.Minimized)
-                window.WindowState = Avalonia.Controls.WindowState.Normal;
+            if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
         }
         window.Activate();
     }
 
     public static Task RefreshAllAsync() =>
-        Task.WhenAll(Desktop.Windows.OfType<SectionWindow>().Select(w => w.ReloadAsync()));
+        Task.WhenAll(Application.Current.Windows.OfType<SectionWindow>().Select(w => w.ReloadAsync()));
 
     public static async Task LogoutAsync()
     {
         await App.Database.CallAsync<bool>("mw_logout", new { p_token = App.Token });
         App.Token = "";
         App.CurrentUser = new Profile();
-        var oldWindows = Desktop.Windows.ToArray();
+        var oldWindows = Application.Current.Windows.Cast<Window>().ToArray();
         var login = new LoginWindow();
-        Desktop.MainWindow = login;
+        Application.Current.MainWindow = login;
         login.Show();
         foreach (var window in oldWindows) window.Close();
     }

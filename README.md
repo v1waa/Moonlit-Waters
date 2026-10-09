@@ -1,24 +1,24 @@
-# Moonlit Waters — Avalonia
+# Moonlit Waters — WPF
 
-Приложение салона: Avalonia 11.3.12, .NET 8, C# и Supabase.
-Обычные AXAML-окна и обработчики кнопок в `.axaml.cs`, без MVVM и DI.
+Приложение салона: WPF, .NET 8 для Windows, C# и Supabase.
+Обычные XAML-окна и обработчики кнопок в `.xaml.cs`, без MVVM и DI.
 
 - `main` — Avalonia для Linux, Windows и macOS.
 - [`wpf`](https://github.com/v1waa/Moonlit-Waters/tree/wpf) — отдельная версия на WPF для Windows.
 
 ## Скачать и запустить
 
-Нужен установленный .NET 8 SDK. Из терминала:
+Нужны Windows и .NET 8 SDK. Из терминала:
 
 ```bash
-git clone https://github.com/v1waa/Moonlit-Waters.git
-cd Moonlit-Waters
+git clone --branch wpf https://github.com/v1waa/Moonlit-Waters.git Moonlit-Waters-WPF
+cd Moonlit-Waters-WPF
 dotnet run --project MoonlitWaters/MoonlitWaters.csproj
 ```
 
-В VS Code открыть именно папку `Moonlit-Waters`, где находится решение
+В VS Code открыть именно папку `Moonlit-Waters-WPF`, где находится решение
 `MoonlitWaters.sln`. Установить рекомендованные расширения и нажать F5,
-выбрав **Moonlit Waters — Avalonia**. Конфигурации запуска и сборки уже есть
+выбрав **Moonlit Waters — WPF**. Конфигурации запуска и сборки уже есть
 в `.vscode/`. В Visual Studio открыть решение и запустить проект.
 
 Supabase уже подключён в `MoonlitWaters/appsettings.json`.
@@ -53,7 +53,7 @@ git pull --ff-only
 | `AppointmentWindow` | Создание и изменение записи, выбор мастера и статуса |
 | `PasswordWindow`, `MessageWindow` | Смена пароля и сообщения |
 
-Каждый раздел — отдельное настоящее окно со своим AXAML и C# файлом.
+Каждый раздел — отдельное настоящее окно со своим XAML и C# файлом.
 Меню открывает окно или активирует уже открытое. Можно держать несколько
 разделов на экране. После сохранения обновляются все открытые разделы.
 Закрытие раздела не закрывает остальные; выход из аккаунта закрывает все окна
@@ -71,9 +71,10 @@ git pull --ff-only
   `WindowNavigation.cs` открывает окна и завершает сеанс.
 - `Models/SalonData.cs` — простые классы данных.
 - `Services/SupabaseService.cs` — HTTP-запросы к серверным функциям.
-- `App.axaml` — общие цвета и стили.
+- `App.xaml` — общие цвета и стили.
 - `database/` — SQL для переноса в другой проект Supabase.
-- `docs/VSCode.md` — исправление ошибки команд расширения Avalonia.
+- `docs/VSCode.md` — справка для расширения Avalonia в ветке `main`; WPF оно не требуется.
+- `.github/smoke/` — проверка создания и отрисовки всех WPF-окон на Windows.
 
 ## Supabase
 
@@ -99,6 +100,11 @@ git pull --ff-only
 dotnet build MoonlitWaters.sln --configuration Release
 ```
 
-GitHub Actions собирает проект на Linux и Windows. При разработке дополнительно
-проверены вход и данные из Supabase, открытие четырёх окон, повторное открытие,
-поиск, диалоги, ограничения мастера и закрытие всех разделов при выходе.
+WPF работает только на Windows. `EnableWindowsTargeting` позволяет проверить
+сборку из Linux, но не запустить интерфейс. GitHub Actions собирает проект
+на Windows и проверяет создание и отрисовку 11 окон, поиск и меню мастера
+на данных в памяти. Проверка не обращается к базе и не меняет её.
+Снимки окон доступны в артефакте `wpf-window-screenshots`.
+
+Время в формах WPF вводится как `10:30`, дата выбирается в календаре.
+Для Visual Studio нужна рабочая нагрузка «Разработка классических приложений .NET».

@@ -1,8 +1,6 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
-using Avalonia.Interactivity;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
@@ -21,19 +19,19 @@ public partial class LoginWindow : Window
     {
         if (!LoginButton.IsEnabled) return;
         ErrorText.Text = "";
-        if (string.IsNullOrWhiteSpace(LoginBox.Text) || string.IsNullOrEmpty(PasswordBox.Text))
+        if (string.IsNullOrWhiteSpace(LoginBox.Text) || string.IsNullOrEmpty(PasswordBox.Password))
         { ErrorText.Text = "Введите логин и пароль."; return; }
         LoginButton.IsEnabled = false;
         try
         {
-            var result = await App.Database.CallAsync<LoginResult>("mw_login", new { p_username = LoginBox.Text.Trim(), p_password = PasswordBox.Text });
+            var result = await App.Database.CallAsync<LoginResult>("mw_login", new { p_username = LoginBox.Text.Trim(), p_password = PasswordBox.Password });
             if (!result.Ok) { ErrorText.Text = result.Message; return; }
             App.Token = result.Token;
             App.CurrentUser = result.Profile;
             var window = new DayWindow();
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) desktop.MainWindow = window;
+            Application.Current.MainWindow = window;
             window.Show();
-            PasswordBox.Text = "";
+            PasswordBox.Password = "";
             Close();
         }
         catch (Exception ex) { ErrorText.Text = ex.Message; }

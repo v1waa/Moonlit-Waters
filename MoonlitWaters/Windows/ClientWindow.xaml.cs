@@ -1,10 +1,11 @@
-using Avalonia.Controls;
-using Avalonia.Interactivity;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
 
-public partial class ClientWindow : Window
+public partial class ClientWindow : DialogWindow
 {
     private readonly Guid? clientId;
     public ClientWindow() { InitializeComponent(); }

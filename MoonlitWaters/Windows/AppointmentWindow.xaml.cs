@@ -1,10 +1,12 @@
-using Avalonia.Controls;
-using Avalonia.Interactivity;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
 
-public partial class AppointmentWindow : Window
+public partial class AppointmentWindow : DialogWindow
 {
     private SalonData? data;
     private readonly Guid? appointmentId;
@@ -19,10 +21,10 @@ public partial class AppointmentWindow : Window
         ServiceBox.ItemsSource = services;
         StatusBox.ItemsSource = new[] { "Ожидает", "Подтверждена", "В работе", "Завершена", "Отменена" };
         StatusBox.SelectedIndex = 1;
-        StatusPanel.IsVisible = appointment is not null;
-        MasterPanel.IsVisible = App.CurrentUser.IsAdmin;
+        StatusPanel.Visibility = (appointment is not null) ? Visibility.Visible : Visibility.Collapsed;
+        MasterPanel.Visibility = (App.CurrentUser.IsAdmin) ? Visibility.Visible : Visibility.Collapsed;
         DateBox.SelectedDate = day;
-        TimeBox.SelectedTime = TimeSpan.FromHours(10);
+        TimeBox.Text = "10:00";
         if (client is not null)
         {
             NameBox.Text = client.Name;
@@ -37,7 +39,7 @@ public partial class AppointmentWindow : Window
             NameBox.Text = appointment.ClientName;
             PhoneBox.Text = appointment.ClientPhone;
             DateBox.SelectedDate = appointment.StartsAt.ToOffset(TimeSpan.FromHours(3)).Date;
-            TimeBox.SelectedTime = appointment.StartsAt.ToOffset(TimeSpan.FromHours(3)).TimeOfDay;
+            TimeBox.Text = appointment.StartsAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm");
             ServiceBox.SelectedItem = services.FirstOrDefault(s => s.Id == appointment.ServiceId);
             StatusBox.SelectedIndex = Array.IndexOf(StatusCodes, appointment.Status);
         }
@@ -59,7 +61,7 @@ public partial class AppointmentWindow : Window
     private async void SaveClick(object? sender, RoutedEventArgs e)
     {
         ErrorText.Text = "";
-        if (ServiceBox.SelectedItem is not Service service || MasterBox.SelectedItem is not Master master || DateBox.SelectedDate is not DateTime date || TimeBox.SelectedTime is not TimeSpan time || StatusBox.SelectedIndex < 0)
+        if (ServiceBox.SelectedItem is not Service service || MasterBox.SelectedItem is not Master master || DateBox.SelectedDate is not DateTime date || !TimeSpan.TryParseExact(TimeBox.Text, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan time) || StatusBox.SelectedIndex < 0)
         { ErrorText.Text = "Выберите услугу, мастера, дату и время."; return; }
         var startsAt = new DateTimeOffset(DateTime.SpecifyKind(date.Date + time, DateTimeKind.Unspecified), TimeSpan.FromHours(3));
         SaveButton.IsEnabled = false;

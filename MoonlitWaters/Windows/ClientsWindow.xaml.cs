@@ -1,6 +1,6 @@
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
@@ -11,7 +11,7 @@ public partial class ClientsWindow : SectionWindow
     {
         InitializeComponent();
         InitializeSection("clients");
-        AddClientButton.IsVisible = App.CurrentUser.IsAdmin;
+        AddClientButton.Visibility = (App.CurrentUser.IsAdmin) ? Visibility.Visible : Visibility.Collapsed;
     }
 
     protected override void RenderData() => FilterClients();
@@ -23,7 +23,7 @@ public partial class ClientsWindow : SectionWindow
         string digits = new(query.Where(char.IsDigit).ToArray());
         var list = data.Clients.Where(c => c.Name.Contains(query, StringComparison.OrdinalIgnoreCase) || c.Phone.Contains(query, StringComparison.OrdinalIgnoreCase) || (digits.Length > 0 && new string(c.Phone.Where(char.IsDigit).ToArray()).Contains(digits))).ToList();
         ClientList.ItemsSource = list;
-        NoClients.IsVisible = list.Count == 0;
+        NoClients.Visibility = (list.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
         ClientList.SelectedItem = list.FirstOrDefault(c => c.Id == selected) ?? list.FirstOrDefault();
         ShowClient();
     }
@@ -42,7 +42,7 @@ public partial class ClientsWindow : SectionWindow
     private async void ClientBookingClick(object? sender, RoutedEventArgs e)
     { if (ClientList.SelectedItem is Client c) await OpenForm(new AppointmentWindow(data, SelectedDay, client: c)); }
     private async void AddClientClick(object? sender, RoutedEventArgs e) => await OpenForm(new ClientWindow());
-    private async void ClientDoubleTapped(object? sender, TappedEventArgs e)
+    private async void ClientDoubleTapped(object? sender, MouseButtonEventArgs e)
     { if (App.CurrentUser.IsAdmin && ClientList.SelectedItem is Client c) await OpenForm(new ClientWindow(c)); }
     private void ClientSelected(object? sender, SelectionChangedEventArgs e) { if (ready) ShowClient(); }
     private void ClientSearchChanged(object? sender, TextChangedEventArgs e) { if (ready) FilterClients(); }

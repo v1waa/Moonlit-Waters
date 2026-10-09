@@ -1,0 +1,43 @@
+<windows:DialogWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:windows="clr-namespace:MoonlitWaters.Windows" x:Class="MoonlitWaters.Windows.MasterWindow" Title="Добавить мастера" Width="550" SizeToContent="Height" WindowStartupLocation="CenterOwner" Style="{StaticResource AppWindow}" ResizeMode="NoResize">
+  <Border xmlns:ns0="https://github.com/avaloniaui" Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
+    <StackPanel>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="FormTitle" Text="Добавить мастера" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" Style="{StaticResource MutedText}"/>
+        <Button Grid.Column="1" Content="×" Padding="4" MinHeight="28" Click="CancelClick" Style="{StaticResource GhostButton}"/>
+      </Grid>
+      <TextBlock Text="ФИО мастера" Style="{StaticResource LabelText}"/>
+      <TextBox x:Name="NameBox" MaxLength="150"/>
+      <TextBlock Text="Контактный номер" Style="{StaticResource LabelText}"/>
+      <TextBox x:Name="PhoneBox" MaxLength="24"/>
+      <TextBlock Text="Процедура / специализация" Style="{StaticResource LabelText}"/>
+      <TextBox x:Name="SpecializationBox" MaxLength="100"/>
+      <TextBlock Text="Банковский счёт" Style="{StaticResource LabelText}"/>
+      <TextBox x:Name="BankBox" MaxLength="20"/>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="16"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+          <TextBlock Text="Начало работы" Style="{StaticResource LabelText}"/>
+          <TextBox x:Name="StartPicker" HorizontalAlignment="Stretch" MaxLength="5" ToolTip="Время в формате ЧЧ:ММ, например 10:30"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <TextBlock Text="Конец работы" Style="{StaticResource LabelText}"/>
+          <TextBox x:Name="EndPicker" HorizontalAlignment="Stretch" MaxLength="5" ToolTip="Время в формате ЧЧ:ММ, например 10:30"/>
+        </StackPanel>
+      </Grid>
+      <CheckBox x:Name="DayOffBox" Content="Выходной" Margin="8,10,0,0"/>
+      <TextBlock x:Name="ErrorText" Margin="8,14,8,0" Style="{StaticResource ErrorText}"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+        <Button x:Name="ArchiveButton" Content="Убрать мастера" Click="ArchiveClick" Margin="0,0,12,0" Style="{StaticResource GhostButton}" Visibility="Collapsed"/>
+        <Button x:Name="SaveButton" Content="Добавить" Width="166" Click="SaveClick" Style="{StaticResource AppButton}"/>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</windows:DialogWindow>

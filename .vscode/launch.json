@@ -2,11 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Moonlit Waters — Avalonia",
+      "name": "Moonlit Waters — WPF",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/MoonlitWaters/bin/Debug/net8.0/MoonlitWaters.dll",
+      "program": "${workspaceFolder}/MoonlitWaters/bin/Debug/net8.0-windows/MoonlitWaters.dll",
       "cwd": "${workspaceFolder}/MoonlitWaters",
       "console": "internalConsole",
       "stopAtEntry": false

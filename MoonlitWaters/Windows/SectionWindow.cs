@@ -1,5 +1,6 @@
-using Avalonia.Controls;
-using Avalonia.Input;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
@@ -11,7 +12,7 @@ public class SectionWindow : Window
     protected bool ready;
     private bool dialogOpen;
     private int loadVersion;
-    private CalendarDatePicker dayPicker = null!;
+    private DatePicker dayPicker = null!;
     private TextBlock pageError = null!;
     private Border dialogShade = null!;
     public string Section { get; private set; } = "";
@@ -20,32 +21,32 @@ public class SectionWindow : Window
     protected void InitializeSection(string section)
     {
         Section = section;
-        dayPicker = this.FindControl<CalendarDatePicker>("DayPicker")!;
-        pageError = this.FindControl<TextBlock>("PageError")!;
-        dialogShade = this.FindControl<Border>("DialogShade")!;
-        this.FindControl<TextBlock>("UserNameText")!.Text = App.CurrentUser.FullName;
-        this.FindControl<TextBlock>("UserRoleText")!.Text = App.CurrentUser.RoleText;
-        this.FindControl<TextBlock>("TopRoleText")!.Text = App.CurrentUser.RoleText;
+        dayPicker = ((DatePicker)FindName("DayPicker"));
+        pageError = ((TextBlock)FindName("PageError"));
+        dialogShade = ((Border)FindName("DialogShade"));
+        ((TextBlock)FindName("UserNameText")).Text = App.CurrentUser.FullName;
+        ((TextBlock)FindName("UserRoleText")).Text = App.CurrentUser.RoleText;
+        ((TextBlock)FindName("TopRoleText")).Text = App.CurrentUser.RoleText;
         dayPicker.SelectedDate = App.MoscowNow.Date;
         foreach (var name in new[] { "DayNav", "ClientsNav", "PricesNav", "StaffNav" })
         {
-            var button = this.FindControl<Button>(name)!;
+            var button = (Button)FindName(name);
             string target = button.Tag?.ToString() ?? "day";
-            button.IsVisible = App.CurrentUser.IsAdmin || target is "day" or "clients";
+            button.Visibility = (App.CurrentUser.IsAdmin || target is "day" or "clients") ? Visibility.Visible : Visibility.Collapsed;
             button.Click += (_, _) => WindowNavigation.Open(target, SelectedDay);
         }
-        this.FindControl<Button>("RefreshButton")!.Click += async (_, _) => await ReloadAsync();
-        this.FindControl<Button>("PasswordButton")!.Click += async (_, _) => await OpenForm(new PasswordWindow());
-        this.FindControl<Button>("LogoutButton")!.Click += async (_, _) =>
+        ((Button)FindName("RefreshButton")).Click += async (_, _) => await ReloadAsync();
+        ((Button)FindName("PasswordButton")).Click += async (_, _) => await OpenForm(new PasswordWindow());
+        ((Button)FindName("LogoutButton")).Click += async (_, _) =>
         {
-            var button = this.FindControl<Button>("LogoutButton")!;
+            var button = ((Button)FindName("LogoutButton"));
             button.IsEnabled = false;
             try { await WindowNavigation.LogoutAsync(); }
-            catch (Exception ex) { pageError.Text = ex.Message; pageError.IsVisible = true; }
+            catch (Exception ex) { pageError.Text = ex.Message; pageError.Visibility = Visibility.Visible; }
             finally { button.IsEnabled = true; }
         };
         dayPicker.SelectedDateChanged += async (_, _) => { if (ready) await ReloadAsync(); };
-        Opened += async (_, _) => { ready = true; await ReloadAsync(); };
+        Loaded += async (_, _) => { ready = true; await ReloadAsync(); };
         Closed += (_, _) => { ready = false; loadVersion++; };
         KeyDown += async (_, e) =>
         {
@@ -58,7 +59,7 @@ public class SectionWindow : Window
     public async Task ReloadAsync()
     {
         int version = ++loadVersion;
-        pageError.IsVisible = false;
+        pageError.Visibility = Visibility.Collapsed;
         try
         {
             var result = await App.Database.CallAsync<SalonData>("mw_load", new { p_token = App.Token, p_day = SelectedDay.ToString("yyyy-MM-dd") });
@@ -72,22 +73,22 @@ public class SectionWindow : Window
             data = new SalonData();
             RenderData();
             pageError.Text = ex.Message;
-            pageError.IsVisible = true;
+            pageError.Visibility = Visibility.Visible;
         }
     }
 
     protected virtual void RenderData() { }
 
-    protected async Task OpenForm(Window form)
+    protected async Task OpenForm(DialogWindow form)
     {
         if (dialogOpen) return;
         dialogOpen = true;
-        dialogShade.IsVisible = true;
+        dialogShade.Visibility = Visibility.Visible;
         form.KeyDown += (_, e) => { if (e.Key == Key.Escape) form.Close(false); };
         try
         {
-            if (await form.ShowDialog<bool>(this)) await WindowNavigation.RefreshAllAsync();
+            if (await form.ShowDialogAsync(this)) await WindowNavigation.RefreshAllAsync();
         }
-        finally { dialogOpen = false; dialogShade.IsVisible = false; }
+        finally { dialogOpen = false; dialogShade.Visibility = Visibility.Collapsed; }
     }
 }

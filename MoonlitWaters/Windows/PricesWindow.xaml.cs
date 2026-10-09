@@ -1,6 +1,6 @@
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 
 namespace MoonlitWaters.Windows;
@@ -24,10 +24,8 @@ public partial class PricesWindow : SectionWindow
         CategoryPanel.Children.Clear();
         foreach (string name in names)
         {
-            var button = new Button { Content = name, Tag = name, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch };
-            button.Classes.Add("app");
-            button.Classes.Add("category");
-            button.Classes.Set("active", category == name);
+            var button = new Button { Content = name, Tag = name, HorizontalAlignment = HorizontalAlignment.Stretch };
+            button.Style = (Style)FindResource(category == name ? "ActiveCategoryButton" : "CategoryButton");
             button.Click += (_, _) => { category = name; BuildCategories(); FilterServices(); };
             CategoryPanel.Children.Add(button);
         }
@@ -39,13 +37,13 @@ public partial class PricesWindow : SectionWindow
         var list = data.Services.Where(s => (query.Length > 0 || s.Category == category) && s.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         CategoryTitle.Text = query.Length > 0 ? "Результаты поиска" : category;
         ServiceList.ItemsSource = list;
-        NoServices.IsVisible = list.Count == 0;
+        NoServices.Visibility = (list.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private async void NewServiceClick(object? sender, RoutedEventArgs e) => await OpenForm(new ServiceWindow(data, category));
     private async void EditServiceClick(object? sender, RoutedEventArgs e)
     { if ((sender as Button)?.Tag is Service s) await OpenForm(new ServiceWindow(data, s.Category, s)); }
-    private async void ServiceDoubleTapped(object? sender, TappedEventArgs e)
+    private async void ServiceDoubleTapped(object? sender, MouseButtonEventArgs e)
     { if (ServiceList.SelectedItem is Service s) await OpenForm(new ServiceWindow(data, s.Category, s)); }
     private void ServiceSearchChanged(object? sender, TextChangedEventArgs e) { if (ready) FilterServices(); }
 }

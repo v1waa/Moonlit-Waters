@@ -1,11 +1,12 @@
-using Avalonia.Controls;
-using Avalonia.Interactivity;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using MoonlitWaters.Models;
 using System.Globalization;
 
 namespace MoonlitWaters.Windows;
 
-public partial class ServiceWindow : Window
+public partial class ServiceWindow : DialogWindow
 {
     private readonly Guid? serviceId;
     public ServiceWindow() { InitializeComponent(); }
@@ -23,7 +24,7 @@ public partial class ServiceWindow : Window
         serviceId = service.Id;
         FormTitle.Text = "Изменить услугу";
         SaveButton.Content = "Сохранить";
-        ArchiveButton.IsVisible = true;
+        ArchiveButton.Visibility = Visibility.Visible;
         NameBox.Text = service.Name;
         DurationBox.Text = service.DurationMinutes.ToString();
         PriceBox.Text = service.Price.ToString(CultureInfo.InvariantCulture);
@@ -47,7 +48,7 @@ public partial class ServiceWindow : Window
     }
     private async void ArchiveClick(object? sender, RoutedEventArgs e)
     {
-        if (!await new MessageWindow("Убрать услугу?", "Услуга исчезнет из прайс-листа. Уже созданные записи сохранятся.", true).ShowDialog<bool>(this)) return;
+        if (!await new MessageWindow("Убрать услугу?", "Услуга исчезнет из прайс-листа. Уже созданные записи сохранятся.", true).ShowDialogAsync(this)) return;
         ArchiveButton.IsEnabled = false;
         try { await App.Database.CallAsync<bool>("mw_archive", new { p_token = App.Token, p_kind = "service", p_id = serviceId }); Close(true); }
         catch (Exception ex) { ErrorText.Text = ex.Message; }

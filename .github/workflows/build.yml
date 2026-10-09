@@ -1,17 +1,14 @@
-name: Build Avalonia
+name: Build and check WPF
 on:
   push:
-    branches: [main]
+    branches: [wpf]
   pull_request:
-    branches: [main]
+    branches: [wpf]
 permissions:
   contents: read
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -19,3 +16,9 @@ jobs:
           dotnet-version: 8.0.x
       - run: dotnet restore MoonlitWaters.sln --locked-mode
       - run: dotnet build MoonlitWaters.sln --configuration Release --no-restore
+      - run: dotnet run --project .github/smoke/WindowSmoke.csproj --configuration Release
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wpf-window-screenshots
+          path: wpf-screenshots/*.png
