@@ -34,8 +34,10 @@ internal static class Program
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
             var app = new App();
             app.InitializeComponent();
-            app.StartupUri = null;
+            app.StartupUri = new Uri("/Moonlit-Waters;component/MainWindow.xaml", UriKind.Relative);
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            Drain();
+            foreach (Window startupWindow in app.Windows.Cast<Window>().ToArray()) startupWindow.Close();
             App.CurrentUser = new Profile { FullName = "Администратор", Role = "admin" };
             var client = new Client { Id = Guid.NewGuid(), Name = "Тестовый клиент", Phone = "+7 900 000-00-00" };
             var service = new Service { Id = Guid.NewGuid(), Name = "Маникюр", Category = "Маникюр", DurationMinutes = 60, Price = 1500 };
