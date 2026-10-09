@@ -1,6 +1,9 @@
 # Moonlit Waters — WPF
 
 Приложение салона: WPF, .NET 8 для Windows, C# и Supabase.
+Основа — присланный пользователем чистый WPF-шаблон.
+Сохранены название проекта `Moonlit-Waters`, пространство имён `Moonlit_Waters`,
+`.NET 8`, `AssemblyInfo.cs`, исходное решение `.slnx` и стартовый `MainWindow`.
 Обычные XAML-окна и обработчики кнопок в `.xaml.cs`, без MVVM и DI.
 
 - `main` — Avalonia для Linux, Windows и macOS.
@@ -13,15 +16,16 @@
 ```bash
 git clone --branch wpf https://github.com/v1waa/Moonlit-Waters.git Moonlit-Waters-WPF
 cd Moonlit-Waters-WPF
-dotnet run --project MoonlitWaters/MoonlitWaters.csproj
+dotnet run --project Moonlit-Waters/Moonlit-Waters.csproj
 ```
 
 В VS Code открыть именно папку `Moonlit-Waters-WPF`, где находится решение
-`MoonlitWaters.sln`. Установить рекомендованные расширения и нажать F5,
+`Moonlit-Waters.sln`. Установить рекомендованные расширения и нажать F5,
 выбрав **Moonlit Waters — WPF**. Конфигурации запуска и сборки уже есть
-в `.vscode/`. В Visual Studio открыть решение и запустить проект.
+в `.vscode/`. В Visual Studio открыть `Moonlit-Waters.sln` и нажать F5. Исходный
+`Moonlit-Waters.slnx` также оставлен для новых версий Visual Studio.
 
-Supabase уже подключён в `MoonlitWaters/appsettings.json`.
+Supabase уже подключён в `Moonlit-Waters/appsettings.json`.
 Используются прежние логины и пароли из выданного владельцу `Доступы.txt`.
 Пароли в GitHub не публикуются. SQL заново выполнять не нужно.
 
@@ -42,7 +46,7 @@ git pull --ff-only
 
 | Окно | Для чего |
 | --- | --- |
-| `LoginWindow` | Вход по логину и паролю |
+| `MainWindow` | Вход по логину и паролю |
 | `DayWindow` | Записи на выбранную дату, статусы, выручка, свободное время |
 | `ClientsWindow` | Клиенты, поиск, контактные данные и последний визит |
 | `PricesWindow` | Категории, цены, длительность, добавление и архивирование услуг |
@@ -73,7 +77,6 @@ git pull --ff-only
 - `Services/SupabaseService.cs` — HTTP-запросы к серверным функциям.
 - `App.xaml` — общие цвета и стили.
 - `database/` — SQL для переноса в другой проект Supabase.
-- `docs/VSCode.md` — справка для расширения Avalonia в ветке `main`; WPF оно не требуется.
 - `.github/smoke/` — проверка создания и отрисовки всех WPF-окон на Windows.
 
 ## Supabase
@@ -97,7 +100,7 @@ git pull --ff-only
 ## Проверка
 
 ```bash
-dotnet build MoonlitWaters.sln --configuration Release
+dotnet build Moonlit-Waters.sln --configuration Release
 ```
 
 WPF работает только на Windows. `EnableWindowsTargeting` позволяет проверить

@@ -5,9 +5,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using MoonlitWaters;
-using MoonlitWaters.Models;
-using MoonlitWaters.Windows;
+using Moonlit_Waters;
+using Moonlit_Waters.Models;
+using Moonlit_Waters.Windows;
 
 internal static class Program
 {
@@ -31,7 +31,7 @@ internal static class Program
 
             foreach (var window in new Window[]
             {
-                new LoginWindow(), new DayWindow(), new ClientsWindow(), new PricesWindow(), new StaffWindow(),
+                new MainWindow(), new DayWindow(), new ClientsWindow(), new PricesWindow(), new StaffWindow(),
                 new ClientWindow(client), new ServiceWindow(data, "Маникюр", service), new MasterWindow(master),
                 new AppointmentWindow(data, App.MoscowNow.Date, appointment), new PasswordWindow(),
                 new MessageWindow("Проверка", "Сообщение и кнопки работают")
@@ -80,7 +80,13 @@ internal static class Program
         content.UpdateLayout();
         if (height <= 0) throw new Exception("Window has no content");
         var bitmap = new RenderTargetBitmap((int)width, (int)Math.Ceiling(height), 96, 96, PixelFormats.Pbgra32);
-        bitmap.Render(content);
+        var drawing = new DrawingVisual();
+        using (var context = drawing.RenderOpen())
+        {
+            context.DrawRectangle(window.Background, null, new Rect(0, 0, width, height));
+            context.DrawRectangle(new VisualBrush(content), null, new Rect(0, 0, width, height));
+        }
+        bitmap.Render(drawing);
         var png = new PngBitmapEncoder();
         png.Frames.Add(BitmapFrame.Create(bitmap));
         using var file = File.Create(Path.Combine("wpf-screenshots", window.GetType().Name + ".png"));

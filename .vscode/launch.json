@@ -6,8 +6,8 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/MoonlitWaters/bin/Debug/net8.0-windows/MoonlitWaters.dll",
-      "cwd": "${workspaceFolder}/MoonlitWaters",
+      "program": "${workspaceFolder}/Moonlit-Waters/bin/Debug/net8.0-windows/Moonlit-Waters.dll",
+      "cwd": "${workspaceFolder}/Moonlit-Waters",
       "console": "internalConsole",
       "stopAtEntry": false
     }

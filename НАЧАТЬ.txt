@@ -1,0 +1,46 @@
+Moonlit Waters — WPF
+
+1. Распакуй весь архив в отдельную папку.
+2. Открой Moonlit-Waters.sln в Visual Studio.
+3. Нажми F5. Сначала откроется окно входа MainWindow.
+4. Логины и пароли находятся в файле Доступы.txt рядом с решением.
+
+Нужны Windows и .NET 8 SDK. В установщике Visual Studio должна быть выбрана
+«Разработка классических приложений .NET».
+Исходный Moonlit-Waters.slnx тоже сохранён — его можно открыть в новой Visual Studio.
+
+Supabase уже подключён в Moonlit-Waters/appsettings.json.
+База уже создана. Запросы из папки database повторно запускать не нужно.
+Администратор видит все разделы; мастер — свои записи и связанных клиентов.
+Примерные записи находятся на 08.10.2026. Выбери эту дату для просмотра примеров.
+
+ОКНА
+MainWindow — вход.
+DayWindow — рабочий день и записи.
+ClientsWindow — клиентская база.
+PricesWindow — прайс-лист.
+StaffWindow — персонал.
+ClientWindow, ServiceWindow, MasterWindow, AppointmentWindow — добавление и изменение.
+PasswordWindow — смена пароля.
+MessageWindow — сообщения и подтверждения.
+
+Меню открывает отдельные окна. Уже открытое окно активируется без создания копии.
+После сохранения данные обновляются во всех открытых окнах.
+Для редактирования клиента, записи или услуги дважды нажми на строку.
+Время в формах вводится в формате ЧЧ:ММ, например 10:30. Все даты и время — МСК.
+
+ЗАПУСК ИЗ ТЕРМИНАЛА WINDOWS
+Из папки с решением:
+dotnet run --project Moonlit-Waters/Moonlit-Waters.csproj
+
+GITHUB
+https://github.com/v1waa/Moonlit-Waters/tree/wpf
+
+Чтобы получать обновления через Git, скачай проект один раз командой:
+git clone --branch wpf https://github.com/v1waa/Moonlit-Waters.git Moonlit-Waters-WPF
+
+Затем из папки этой Git-копии обновляй только проект:
+git pull --ff-only
+
+Обычный ZIP не содержит историю Git, поэтому git pull в распакованном ZIP не работает.
+Доступы.txt не публикуется на GitHub; сохрани его из этого архива.

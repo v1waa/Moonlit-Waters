@@ -14,8 +14,8 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      - run: dotnet restore MoonlitWaters.sln --locked-mode
-      - run: dotnet build MoonlitWaters.sln --configuration Release --no-restore
+      - run: dotnet restore Moonlit-Waters.sln --locked-mode
+      - run: dotnet build Moonlit-Waters.sln --configuration Release --no-restore
       - run: dotnet run --project .github/smoke/WindowSmoke.csproj --configuration Release
       - uses: actions/upload-artifact@v4
         if: always()

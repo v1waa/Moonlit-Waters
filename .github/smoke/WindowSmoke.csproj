@@ -8,6 +8,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../MoonlitWaters/MoonlitWaters.csproj" />
+    <ProjectReference Include="../../Moonlit-Waters/Moonlit-Waters.csproj" />
   </ItemGroup>
 </Project>
