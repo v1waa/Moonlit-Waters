@@ -1,5 +1,5 @@
 <windows:DialogWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:windows="clr-namespace:Moonlit_Waters.Windows" x:Class="Moonlit_Waters.Windows.AppointmentWindow" Title="Добавить запись" Width="550" SizeToContent="Height" WindowStartupLocation="CenterOwner" Style="{StaticResource AppWindow}" ResizeMode="NoResize">
-  <Border xmlns:ns0="https://github.com/avaloniaui" Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
+  <Border Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
     <StackPanel>
       <Grid>
         <Grid.ColumnDefinitions>
@@ -26,7 +26,7 @@
           <ColumnDefinition Width="12"/>
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <DatePicker x:Name="DateBox" SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+        <DatePicker x:Name="DateBox" DateValidationError="DateValidationError" SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
         <TextBox Grid.Column="2" x:Name="TimeBox" HorizontalAlignment="Stretch" MaxLength="5" ToolTip="Время в формате ЧЧ:ММ, например 10:30"/>
       </Grid>
       <StackPanel x:Name="StatusPanel">

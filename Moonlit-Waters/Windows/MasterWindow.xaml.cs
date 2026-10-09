@@ -41,7 +41,7 @@ public partial class MasterWindow : DialogWindow
         {
             var access = await App.Database.CallAsync<MasterAccess>("mw_save_master", new { p_token = App.Token, p_id = masterId, p_name = NameBox.Text ?? "", p_phone = PhoneBox.Text ?? "", p_specialization = SpecializationBox.Text ?? "", p_bank_account = BankBox.Text?.Trim() ?? "", p_work_start = start.ToString(@"hh\:mm"), p_work_end = end.ToString(@"hh\:mm"), p_day_off = DayOffBox.IsChecked == true });
             if (!string.IsNullOrEmpty(access.Password))
-                await new MessageWindow("Мастер добавлен", $"Данные для входа:\n\nЛогин: {access.Username}\nПароль: {access.Password}\n\nСохраните пароль. После входа мастер может сменить его кнопкой «Пароль».").ShowDialogAsync(this);
+                await new MessageWindow("Мастер добавлен", $"Данные для входа:\n\nЛогин: {access.Username}\nПароль: {access.Password}\n\nСохраните эти данные для входа мастера.").ShowDialogAsync(this);
             Close(true);
         }
         catch (Exception ex) { ErrorText.Text = ex.Message; }

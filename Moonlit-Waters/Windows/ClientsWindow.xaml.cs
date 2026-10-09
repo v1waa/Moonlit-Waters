@@ -5,16 +5,111 @@ using Moonlit_Waters.Models;
 
 namespace Moonlit_Waters.Windows;
 
-public partial class ClientsWindow : SectionWindow
+public partial class ClientsWindow : Window
 {
+
+    private SalonData data = new();
+    private bool ready;
+    private bool dialogOpen;
+    private int loadVersion;
+    private DateTime SelectedDay => (DayPicker.SelectedDate ?? WindowNavigation.SelectedDay).Date;
+
+    private async void WindowLoaded(object sender, RoutedEventArgs e)
+    {
+        ready = true;
+        await ReloadAsync();
+    }
+
+    private void WindowClosed(object? sender, EventArgs e)
+    {
+        ready = false;
+        loadVersion++;
+    }
+
+    private void NavigateClick(object sender, RoutedEventArgs e)
+    {
+        if (!dialogOpen && sender is Button button)
+            WindowNavigation.Switch(this, button.Tag?.ToString() ?? "day", SelectedDay);
+    }
+
+    private async void DayChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!ready) return;
+        if (DayPicker.SelectedDate is null)
+        {
+            DayPicker.SelectedDate = WindowNavigation.SelectedDay;
+            return;
+        }
+        WindowNavigation.SelectedDay = SelectedDay;
+        await ReloadAsync();
+    }
+
+    private void DateValidationError(object sender, DatePickerDateValidationErrorEventArgs e)
+    {
+        e.ThrowException = false;
+        DayPicker.Text = SelectedDay.ToString("dd.MM.yyyy");
+    }
+
+    private async void WindowKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F5 && !dialogOpen)
+        {
+            e.Handled = true;
+            await ReloadAsync();
+        }
+    }
+
+    private async void LogoutClick(object sender, RoutedEventArgs e)
+    {
+        LogoutButton.IsEnabled = false;
+        try { await WindowNavigation.LogoutAsync(this); }
+        catch (Exception ex) { PageError.Text = ex.Message; PageError.Visibility = Visibility.Visible; }
+        finally { LogoutButton.IsEnabled = true; }
+    }
+
+    private async Task ReloadAsync()
+    {
+        int version = ++loadVersion;
+        PageError.Visibility = Visibility.Collapsed;
+        try
+        {
+            var result = await App.Database.CallAsync<SalonData>("mw_load",
+                new { p_token = App.Token, p_day = SelectedDay.ToString("yyyy-MM-dd") });
+            if (version != loadVersion) return;
+            data = result;
+            RenderData();
+        }
+        catch (Exception ex)
+        {
+            if (version != loadVersion) return;
+            data = new SalonData();
+            RenderData();
+            PageError.Text = ex.Message;
+            PageError.Visibility = Visibility.Visible;
+        }
+    }
+
+    private async Task OpenForm(DialogWindow form)
+    {
+        if (dialogOpen) return;
+        dialogOpen = true;
+        DialogShade.Visibility = Visibility.Visible;
+        form.KeyDown += (_, e) => { if (e.Key == Key.Escape) form.Close(false); };
+        try { if (await form.ShowDialogAsync(this)) await ReloadAsync(); }
+        finally { dialogOpen = false; DialogShade.Visibility = Visibility.Collapsed; }
+    }
+
     public ClientsWindow()
     {
         InitializeComponent();
-        InitializeSection("clients");
+        UserNameText.Text = App.CurrentUser.FullName;
+        UserRoleText.Text = TopRoleText.Text = App.CurrentUser.RoleText;
+        PricesNav.Visibility = StaffNav.Visibility = App.CurrentUser.IsAdmin ? Visibility.Visible : Visibility.Collapsed;
+        DayPicker.SelectedDate = WindowNavigation.SelectedDay;
         AddClientButton.Visibility = (App.CurrentUser.IsAdmin) ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    protected override void RenderData() => FilterClients();
+    private void RenderData() => FilterClients();
 
     private void FilterClients()
     {

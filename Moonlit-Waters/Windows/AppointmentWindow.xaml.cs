@@ -47,6 +47,12 @@ public partial class AppointmentWindow : DialogWindow
         UpdateMasters();
         if (appointment is not null) MasterBox.SelectedItem = (MasterBox.ItemsSource as IEnumerable<Master>)?.FirstOrDefault(m => m.Id == appointment.MasterId);
     }
+    private void DateValidationError(object sender, DatePickerDateValidationErrorEventArgs e)
+    {
+        e.ThrowException = false;
+        DateBox.Text = (DateBox.SelectedDate ?? App.MoscowNow.Date).ToString("dd.MM.yyyy");
+    }
+
     private void UpdateMasters()
     {
         if (data is null) return;

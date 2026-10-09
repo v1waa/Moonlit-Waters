@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml" ShutdownMode="OnLastWindowClose">
   <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Styles/DatePicker.xaml" />
+      </ResourceDictionary.MergedDictionaries>
     <Style x:Key="AppWindow" TargetType="Window">
       <Setter Property="Background" Value="#F7F4EF" />
       <Setter Property="Foreground" Value="#152024" />
@@ -140,5 +144,6 @@
         <Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="#F0E3D9" /></Trigger>
       </Style.Triggers>
     </Style>
+    </ResourceDictionary>
   </Application.Resources>
 </Application>

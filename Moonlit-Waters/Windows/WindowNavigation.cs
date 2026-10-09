@@ -5,42 +5,51 @@ namespace Moonlit_Waters.Windows;
 
 public static class WindowNavigation
 {
-    public static void Open(string section, DateTime day)
+    public static DateTime SelectedDay { get; set; } = App.MoscowNow.Date;
+
+    public static void Switch(Window current, string section, DateTime day)
     {
         if (!App.CurrentUser.IsAdmin && section is "prices" or "staff") return;
-        var window = Application.Current.Windows.OfType<SectionWindow>().FirstOrDefault(w => w.Section == section);
-        if (window is null)
+        if (section == "day" && current is DayWindow ||
+            section == "clients" && current is ClientsWindow ||
+            section == "prices" && current is PricesWindow ||
+            section == "staff" && current is StaffWindow) return;
+
+        SelectedDay = day.Date;
+        Window? next = section switch
         {
-            window = section switch
-            {
-                "clients" => new ClientsWindow(),
-                "prices" => new PricesWindow(),
-                "staff" => new StaffWindow(),
-                _ => new DayWindow()
-            };
-            window.SelectDay(day);
-            window.Show();
-        }
-        else
+            "day" => new DayWindow(),
+            "clients" => new ClientsWindow(),
+            "prices" => new PricesWindow(),
+            "staff" => new StaffWindow(),
+            _ => null
+        };
+        if (next is null) return;
+
+        // Новый раздел появляется на месте предыдущего, включая развёрнутый режим.
+        var bounds = current.RestoreBounds;
+        if (!bounds.IsEmpty)
         {
-            window.SelectDay(day);
-            if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
+            next.WindowStartupLocation = WindowStartupLocation.Manual;
+            next.Left = bounds.Left;
+            next.Top = bounds.Top;
+            next.Width = bounds.Width;
+            next.Height = bounds.Height;
         }
-        window.Activate();
+        next.WindowState = current.WindowState;
+        Application.Current.MainWindow = next;
+        next.Show();
+        current.Close();
     }
 
-    public static Task RefreshAllAsync() =>
-        Task.WhenAll(Application.Current.Windows.OfType<SectionWindow>().Select(w => w.ReloadAsync()));
-
-    public static async Task LogoutAsync()
+    public static async Task LogoutAsync(Window current)
     {
         await App.Database.CallAsync<bool>("mw_logout", new { p_token = App.Token });
         App.Token = "";
         App.CurrentUser = new Profile();
-        var oldWindows = Application.Current.Windows.Cast<Window>().ToArray();
         var login = new MainWindow();
         Application.Current.MainWindow = login;
         login.Show();
-        foreach (var window in oldWindows) window.Close();
+        current.Close();
     }
 }

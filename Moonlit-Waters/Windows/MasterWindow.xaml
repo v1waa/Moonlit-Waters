@@ -1,5 +1,5 @@
 <windows:DialogWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:windows="clr-namespace:Moonlit_Waters.Windows" x:Class="Moonlit_Waters.Windows.MasterWindow" Title="Добавить мастера" Width="550" SizeToContent="Height" WindowStartupLocation="CenterOwner" Style="{StaticResource AppWindow}" ResizeMode="NoResize">
-  <Border xmlns:ns0="https://github.com/avaloniaui" Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
+  <Border Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
     <StackPanel>
       <Grid>
         <Grid.ColumnDefinitions>

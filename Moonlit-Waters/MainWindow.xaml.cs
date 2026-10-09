@@ -29,6 +29,7 @@ public partial class MainWindow : Window
             if (!result.Ok) { ErrorText.Text = result.Message; return; }
             App.Token = result.Token;
             App.CurrentUser = result.Profile;
+            WindowNavigation.SelectedDay = App.MoscowNow.Date;
             var window = new DayWindow();
             Application.Current.MainWindow = window;
             window.Show();
