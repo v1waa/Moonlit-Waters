@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="MoonlitWaters.Windows.MasterWindow" Title="Добавить мастера" Width="550" SizeToContent="Height" CanResize="False" WindowStartupLocation="CenterOwner" SystemDecorations="BorderOnly">
+  <Border Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
+    <StackPanel>
+      <Grid ColumnDefinitions="*,30"><TextBlock x:Name="FormTitle" Text="Добавить мастера" Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" /><Button Grid.Column="1" Content="×" Classes="app ghost" Padding="4" MinHeight="28" Click="CancelClick" /></Grid>
+      <TextBlock Text="ФИО мастера" Classes="label" /><TextBox x:Name="NameBox" MaxLength="150" />
+<TextBlock Text="Контактный номер" Classes="label" /><TextBox x:Name="PhoneBox" MaxLength="24" />
+<TextBlock Text="Процедура / специализация" Classes="label" /><TextBox x:Name="SpecializationBox" MaxLength="100" />
+<TextBlock Text="Банковский счёт" Classes="label" /><TextBox x:Name="BankBox" MaxLength="20" />
+<Grid ColumnDefinitions="*,16,*"><StackPanel><TextBlock Text="Начало работы" Classes="label" /><TimePicker x:Name="StartPicker" ClockIdentifier="24HourClock" MinuteIncrement="5" HorizontalAlignment="Stretch" /></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="Конец работы" Classes="label" /><TimePicker x:Name="EndPicker" ClockIdentifier="24HourClock" MinuteIncrement="5" HorizontalAlignment="Stretch" /></StackPanel></Grid><CheckBox x:Name="DayOffBox" Content="Выходной" Margin="8,10,0,0" />
+      <TextBlock x:Name="ErrorText" Classes="error" Margin="8,14,8,0" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" Margin="0,18,0,0">
+        <Button x:Name="ArchiveButton" Content="Убрать мастера" Classes="app ghost" IsVisible="False" Click="ArchiveClick" /><Button x:Name="SaveButton" Content="Добавить" Width="166" Click="SaveClick" Classes="app" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</Window>

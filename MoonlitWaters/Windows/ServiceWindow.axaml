@@ -1,0 +1,17 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="MoonlitWaters.Windows.ServiceWindow" Title="Добавить услугу" Width="550" SizeToContent="Height" CanResize="False" WindowStartupLocation="CenterOwner" SystemDecorations="BorderOnly">
+  <Border Padding="30,12,30,24" Background="#F7F4EF" CornerRadius="18">
+    <StackPanel>
+      <Grid ColumnDefinitions="*,30"><TextBlock x:Name="FormTitle" Text="Добавить услугу" Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" /><Button Grid.Column="1" Content="×" Classes="app ghost" Padding="4" MinHeight="28" Click="CancelClick" /></Grid>
+      <TextBlock Text="ФИО мастера" Classes="label" /><ComboBox x:Name="MasterBox"  />
+<TextBlock Text="Название услуги" Classes="label" /><TextBox x:Name="NameBox" MaxLength="150" />
+<TextBlock Text="Категория" Classes="label" /><ComboBox x:Name="CategoryBox"  />
+<TextBlock Text="Продолжительность, минут" Classes="label" /><TextBox x:Name="DurationBox" MaxLength="3" />
+<TextBlock Text="Стоимость, ₽" Classes="label" /><TextBox x:Name="PriceBox" MaxLength="10" />
+
+      <TextBlock x:Name="ErrorText" Classes="error" Margin="8,14,8,0" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" Margin="0,18,0,0">
+        <Button x:Name="ArchiveButton" Content="Убрать из прайса" Classes="app ghost" IsVisible="False" Click="ArchiveClick" /><Button x:Name="SaveButton" Content="Добавить" Width="166" Click="SaveClick" Classes="app" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</Window>
