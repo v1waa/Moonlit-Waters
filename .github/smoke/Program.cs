@@ -114,8 +114,8 @@ internal static class Program
         var popup = (Popup)picker.Template.FindName("PART_Popup", picker);
         if (!picker.IsDropDownOpen || !popup.IsOpen || popup.Child is not System.Windows.Controls.Calendar calendar)
             throw new Exception("Calendar button does not open the calendar");
-        if (calendar.FirstDayOfWeek != DayOfWeek.Monday || calendar.Language.IetfLanguageTag != "ru-RU")
-            throw new Exception("Calendar culture is incorrect");
+        if (calendar.FirstDayOfWeek != DayOfWeek.Monday || !string.Equals(calendar.Language.IetfLanguageTag, "ru-RU", StringComparison.OrdinalIgnoreCase))
+            throw new Exception($"Calendar culture is incorrect: {calendar.FirstDayOfWeek}, {calendar.Language.IetfLanguageTag}");
         calendar.SelectedDate = new DateTime(2026, 10, 15);
         Drain();
         if (picker.SelectedDate != new DateTime(2026, 10, 15) || text.Text != "15.10.2026")
